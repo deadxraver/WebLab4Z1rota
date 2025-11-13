@@ -5,19 +5,18 @@
              version="3.2">
   <persistence-unit name="default" transaction-type="JTA">
 
-    <jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
-    
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <jta-data-source>java:jboss/datasources/PostgresDS</jta-data-source>
+
+    <class>org.ziro.backend.Point</class>
+    <class>org.ziro.backend.User</class>
 
     <properties>
-
+      <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
       <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
-
-
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.format_sql" value="true"/>
     </properties>
 
   </persistence-unit>
-
-
 </persistence>
