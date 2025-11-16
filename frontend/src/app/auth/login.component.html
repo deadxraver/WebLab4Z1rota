@@ -22,7 +22,7 @@
           name="username"
           type="text"
           [(ngModel)]="credentials.username"
-          placeholder="Введите ваш логин"
+          placeholder="Введите логин"
           required
         >
       </div>
@@ -35,7 +35,7 @@
           name="password"
           type="password"
           [(ngModel)]="credentials.password"
-          placeholder="Введите ваш пароль"
+          placeholder="Введите пароль"
           required
         >
       </div>
@@ -49,6 +49,13 @@
       <button type="submit" [disabled]="isLoading">
         {{ isLoading ? 'Вход...' : 'Войти' }}
       </button>
+
+      
+
+    
+    <button type="button" style="margin-top: 10px;" class="btn-secondary" (click)="onRegister()">
+      Зарегистрироваться
+    </button>
 
     </form>
   </main>

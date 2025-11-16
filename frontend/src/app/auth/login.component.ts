@@ -22,9 +22,10 @@ export class LoginComponent {
 
      constructor(private router: Router) {}
 
+    onRegister(): void {}
 
-  onSubmit(): void {
-    // Если форма не заполнена, ничего не делаем
+    onSubmit(): void {
+    
     if (!this.credentials.username || !this.credentials.password) {
       this.errorMessage = 'Пожалуйста, введите логин и пароль.';
       return;
