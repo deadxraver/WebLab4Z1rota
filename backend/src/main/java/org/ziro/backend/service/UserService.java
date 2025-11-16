@@ -3,6 +3,7 @@ package org.ziro.backend.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
+import org.ziro.backend.exceptions.UserAlreadyExistsException;
 import org.ziro.backend.exceptions.UserNotFoundException;
 import org.ziro.backend.models.Users;
 import org.ziro.backend.repository.UserRepository;
@@ -28,6 +29,16 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(Response.Status.NOT_FOUND,username));
         return passwordHasher.verifyPassword(password,user.getPassword());
 
+    }
+
+    public boolean register(String username, String password) {
+        boolean user = userRepository.existsByUsername(username);
+        if (!user) {
+            throw new UserAlreadyExistsException(Response.Status.BAD_REQUEST, "Это имя уже занято");
+        }
+        String hashed = passwordHasher.hashPassword(password);
+        userRepository.save(new Users(username, hashed));
+        return true;
     }
 
 }

@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface UserRepository extends CrudRepository<Users, Long> {
     Optional<Users> findByUsername(String username);
     String getPassword(String username);
+    boolean existsByUsername(String username);
 
 
 
