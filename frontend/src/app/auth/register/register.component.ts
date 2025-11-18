@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AbstractControl, FormsModule, ValidationErrors } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 
 
@@ -32,7 +33,7 @@ export function passwordValidator(control: AbstractControl): ValidationErrors | 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule ],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.component.html',
   styleUrl: './register.css',
 })
@@ -51,7 +52,7 @@ export class RegisterComponent implements OnInit {
   isLoading = false;
   errorMessage ='';
 
-   constructor(private fb: FormBuilder,private router: Router) {}
+   constructor(private fb: FormBuilder,private router: Router, private authService: AuthService ) {}
 
 
   ngOnInit(): void {
@@ -88,11 +89,34 @@ export class RegisterComponent implements OnInit {
     this.registerForm.markAllAsTouched();
 
     if (this.registerForm.invalid) {
-      
       return;
     }
+     this.isLoading = true; 
+    this.errorMessage = ''; 
 
-    console.log('Форма отправлена!', this.registerForm.value);
+   const formValue = this.registerForm.value;
+
+   const registrationData = {
+    username: formValue.username,
+    password: formValue.password
+   };
+
+   this.authService.register(registrationData).subscribe({
+
+    next: () => {
+      this.router.navigate(['/login'])
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+      if (err.status === 400) {
+            this.errorMessage = 'Имя пользователя занято';
+        } else {
+            this.errorMessage = 'Произошла ошибка сервера. Попробуйте позже.';
+    }
+  }
+
+   });
     
   }
   

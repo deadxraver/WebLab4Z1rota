@@ -7,6 +7,11 @@ interface TokenResponse {
     token: string;
 }
 
+export interface AuthCredentials {
+    username: string;
+    password: string;
+}
+
 @Injectable({
     providedIn:"root"
 
@@ -17,7 +22,7 @@ export class AuthService {
 
     constructor(private http: HttpClient) {}
 
-    login(credentials: any): Observable<TokenResponse> {
+    login(credentials: AuthCredentials): Observable<TokenResponse> {
         const loginUrl = `${this.apiUrl}/login`;
 
         return this.http.post<TokenResponse>(loginUrl,credentials).pipe(
@@ -29,12 +34,18 @@ export class AuthService {
         );
     }
 
+
+    register(credentials: AuthCredentials): Observable<any> {
+        const registerUrl = `${this.apiUrl}/register`;
+        return this.http.post(registerUrl,credentials)
+    }
+
     logout(): void {
         localStorage.removeItem('authToken');
     }
 
     isLoggedIn(): boolean {
-        return !localStorage.getItem('authToken');
+        return !!localStorage.getItem('authToken');
     }
 
 

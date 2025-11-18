@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-graph',
   imports: [],
-  templateUrl: './graph.html',
+  templateUrl: './graph.component.html',
   styleUrl: './graph.css',
 })
 export class Graph {

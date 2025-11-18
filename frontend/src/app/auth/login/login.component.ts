@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth.service';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: "app-login",
@@ -13,7 +13,7 @@ import { RouterModule } from '@angular/router';
     styleUrls: ['./login.component.css']
 
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
     credentials = {
         username: "",
         password: ""
@@ -22,8 +22,18 @@ export class LoginComponent {
     errorMessage="";
     isLoading = false;
 
-     constructor(private router: Router, private authService: AuthService) {}
+     constructor(private router: Router, private authService: AuthService, private route: ActivatedRoute) {}
 
+
+    ngOnInit(): void {
+    
+    this.route.queryParams.subscribe(params => {
+      if (params['sessionExpired'] === 'true') {
+        this.errorMessage = 'Срок действия вашей сессии истек. Пожалуйста, войдите заново.';
+      }
+
+    });
+    }
 
     onSubmit(): void {
     
