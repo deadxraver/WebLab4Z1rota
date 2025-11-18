@@ -1,9 +1,11 @@
 package org.ziro.backend.util;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.nio.charset.StandardCharsets;
 
+@ApplicationScoped
 public class PasswordHasher {
 
 

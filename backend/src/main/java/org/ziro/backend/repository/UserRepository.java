@@ -1,21 +1,71 @@
 package org.ziro.backend.repository;
 
-
-import jakarta.data.repository.CrudRepository;
-import jakarta.data.repository.Repository;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.ziro.backend.models.Users;
 
 import java.util.Optional;
 
-@Repository
-public interface UserRepository extends CrudRepository<Users, Long> {
-    Optional<Users> findByUsername(String username);
-    String getPassword(String username);
-    boolean existsByUsername(String username);
+@Stateless
+public class UserRepository {
 
+    @PersistenceContext
+    private EntityManager entityManager;
 
+    public Users save(Users user) {
+        if (user.getId() == null || user.getId() == 0) {
+            entityManager.persist(user);
+            return user;
+        } else {
+            return entityManager.merge(user);
+        }
+    }
 
+    public Optional<Users> findById(Long id) {
+        Users user = entityManager.find(Users.class, id);
+        return Optional.ofNullable(user);
+    }
 
+    public Optional<Users> findByUsername(String username) {
+        TypedQuery<Users> query = entityManager.createQuery(
+                "SELECT u FROM Users u WHERE u.username = :username", Users.class);
+        query.setParameter("username", username);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
 
+    public String getPassword(String username) {
+        TypedQuery<String> query = entityManager.createQuery(
+                "SELECT u.password FROM Users u WHERE u.username = :username", String.class);
+        query.setParameter("username", username);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 
+    public boolean existsByUsername(String username) {
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT COUNT(u) FROM Users u WHERE u.username = :username", Long.class);
+        query.setParameter("username", username);
+        return query.getSingleResult() > 0;
+    }
+
+    public void delete(Users user) {
+        if (entityManager.contains(user)) {
+            entityManager.remove(user);
+        } else {
+            Users managedUser = findById(user.getId()).orElse(null);
+            if (managedUser != null) {
+                entityManager.remove(managedUser);
+            }
+        }
+    }
 }

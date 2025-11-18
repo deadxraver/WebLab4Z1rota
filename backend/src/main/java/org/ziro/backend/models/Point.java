@@ -1,12 +1,15 @@
 package org.ziro.backend.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
 public class Point {
     @Id
-    private long id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
     private double x;
     private double y;
     private double r;
@@ -45,5 +48,12 @@ public class Point {
     public void setR(double r) {
         this.r = r;
     }
+    public Long getId() {
+        return id;
+    }
+    public void setId(long id) {
+        this.id = id;
+    }
+
 
 }
