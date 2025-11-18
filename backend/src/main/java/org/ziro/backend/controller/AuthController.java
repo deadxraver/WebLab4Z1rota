@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jdk.jfr.StackTrace;
 import org.ziro.backend.dto.LoginCredentials;
 import org.ziro.backend.dto.TokenResponse;
 import org.ziro.backend.exceptions.UserNotFoundException;
@@ -31,25 +32,18 @@ public class AuthController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/login")
     public Response login(LoginCredentials credentials) {
-
-
         try {
-            boolean isAuthenticated = userService.login(credentials.getUsername(), credentials.getPassword());
-
-            if (isAuthenticated) {
-
+            if (userService.login(credentials.getUsername(), credentials.getPassword())) {
                 String token = tokenService.generateToken(credentials.getUsername());
-
                 return Response.ok(new TokenResponse(token)).build();
             } else {
-
+                System.out.println("Ошибка");
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
         } catch (UserNotFoundException e ) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
 
         } catch (Exception e) {
-
             e.printStackTrace();
             return Response.serverError()
                     .entity("Server Error: " + e.getMessage())
@@ -58,7 +52,7 @@ public class AuthController {
     }
     @GET
     public Response getToken() {
-        System.out.println("Привет");
+
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
@@ -67,9 +61,14 @@ public class AuthController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/register")
     public Response register(LoginCredentials credentials) {
-        if (userService.register(credentials.getUsername(), credentials.getPassword())) {
-            return Response.status(Response.Status.CREATED).build();
+        try {
+            if (userService.register(credentials.getUsername(), credentials.getPassword())) {
+                return Response.status(Response.Status.CREATED).build();
+            }
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return Response.status(Response.Status.BAD_REQUEST).build();
+       return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 }

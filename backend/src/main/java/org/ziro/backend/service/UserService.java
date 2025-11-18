@@ -3,6 +3,7 @@ package org.ziro.backend.service;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import org.ziro.backend.exceptions.UserAlreadyExistsException;
 import org.ziro.backend.exceptions.UserNotFoundException;
@@ -44,7 +45,7 @@ public class UserService {
 
     public boolean register(String username, String password) {
         boolean user = userRepository.existsByUsername(username);
-        if (!user) {
+        if (user) {
             return false;
         }
         String hashed = passwordHasher.hashPassword(password);

@@ -19,7 +19,7 @@ public class PasswordHasher {
 
     public Boolean verifyPassword(String password, String hashedPassword) {
         BCrypt.Verifyer verifyer = BCrypt.verifyer();
-        BCrypt.Result result = verifyer.verify(hashedPassword.toCharArray(), password.toCharArray());
+        BCrypt.Result result = verifyer.verify(password.toCharArray(),  hashedPassword.toCharArray());
 
         return result.verified;
 
