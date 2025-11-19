@@ -3,6 +3,10 @@
   
   <header class="top-bar">
     <div class="logo">Лабки Лапки 4 🐾</div>
+    <a href="https://contract.gosuslugi.ru/?ysclid=mi64h5slt2697626724" target="_blank" class="center-img-link">
+        
+        <img src="assets/reklama.webp" alt="Logo" class="center-img">
+    </a>
     <div class="user-panel">
       <span class="username">Пользователь: <strong>{{ currentUser }}</strong></span>
       <button class="logout-btn" (click)="logout()">Выйти</button>
@@ -68,7 +72,7 @@
         </div>
 
         
-        <button type="submit" class="primary-btn" [disabled]="!selectedX || !selectedR">
+        <button type="submit" class="primary-btn" [disabled]="selectedX == null || !selectedR">
           Проверить
         </button>
       </form>
