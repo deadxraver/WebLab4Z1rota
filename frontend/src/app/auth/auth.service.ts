@@ -2,6 +2,12 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { tap } from "rxjs";
+import { jwtDecode } from "jwt-decode";
+
+interface CustomJwtPayload {
+    sub: string;
+    exp: number;
+}
 
 interface TokenResponse {
     token: string;
@@ -49,4 +55,15 @@ export class AuthService {
     }
 
 
+    getUsername(): string {
+    const token = localStorage.getItem('authToken');
+    if (!token) return 'Гость';
+    
+    try {
+      const decoded = jwtDecode<CustomJwtPayload>(token);
+      return decoded.sub;
+    } catch (e) {
+      return 'Гость';
+    }
+  }
 }
