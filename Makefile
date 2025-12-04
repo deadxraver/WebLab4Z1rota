@@ -6,8 +6,11 @@ SRC=src
 JAVA=java
 JAVAC=javac
 
-all: $B
+all: $B test
 	cd $B && $(JAVA) Main
+
+test: $B
+	test "$$(cd $B && $(JAVA) Main)" = ''
 
 $B: $(SRC)
 	$(JAVAC) $^/*.java -d $B
